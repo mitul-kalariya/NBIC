@@ -18,17 +18,6 @@ from app.exception.base_exception import (
 
 router = APIRouter()
 
-# class BookDataSchema(BaseModel):
-#     """
-#     Book data upload schema
-#     """
-#     id : int
-#     title : str
-#     author_name : str
-#     description : str
-#     category : str
-#     tagName : str
-
 
 @router.post("/nbic-file-data",status_code=status.HTTP_201_CREATED)
 async def upload_data(
