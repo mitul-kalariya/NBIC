@@ -9,7 +9,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
-from app.api.v1.routers import api_router
+from app.api.ml.routers import api_router
 from app.core.configuration import settings
 
 logger = logging.getLogger(__name__)

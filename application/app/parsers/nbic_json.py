@@ -16,6 +16,7 @@ def json_parser(book_data: BookDataSchema) -> None:
     Args:
         book_data (BookDataSchema): A schema object with book data information
     """
+    book_id = book_data.id
     meta_fields = ['title','author_name','category','tagName']
     base_data = (' title | ' + book_data.title +
         ', author_name | '+ book_data.author_name +
@@ -24,4 +25,4 @@ def json_parser(book_data: BookDataSchema) -> None:
         ', description | ' + book_data.description)
     book_data = dict(book_data)
     meta = {x: book_data.get(x) for x in meta_fields}
-    return [Document(page_content=base_data,metadata=meta)]
+    return book_id,base_data,meta

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Any
 import pinecone, os
 
 from langchain.docstore.document import Document
@@ -28,6 +28,16 @@ class CustomPinecone(Pinecone, CustomBaseVectorStore):
         )
         index = pinecone.Index(os.environ.get("PINECONE_INDEX"))
         return index
+
+
+    def insert_document_with_index(self,id:Any ,docs:str,meta:dict={}):
+        """insert single data raw into pinecone database with index"""
+        upload_data = []
+        meta[self._text_key] = docs
+        embeddings = self._embedding_function(docs)
+        upload_data.append({'id':str(id),'values':embeddings,'metadata':meta})
+        return self._index.upsert(vectors=upload_data,namespace=self._namespace)
+
 
     def insert_documents(self, docs: List[Document]):
         """Insert documents into the pinecone database."""
@@ -61,6 +71,6 @@ class CustomPinecone(Pinecone, CustomBaseVectorStore):
 
 custom_pinecone = CustomPinecone(
     embedding_function=VectorDatabaseConstants.VECTOR_EMBEDDING.value.embed_query,
-    text_key="langchiann",
+    text_key="langchain",
     namespace="namespace",
 )
