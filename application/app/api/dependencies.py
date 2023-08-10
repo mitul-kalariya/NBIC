@@ -8,7 +8,6 @@ from jose import jwt, JWTError
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from langchain.vectorstores import VectorStore
-
 from app import models, schemas
 from app.crud import user, conversation
 from app.core import security
@@ -61,8 +60,7 @@ def get_vector_db(vectordb_name: str = "pinecone") -> Optional[VectorStore]:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="connection to vector database not established",
-        )
-
+        )   
 
 def get_db() -> Generator:
     """

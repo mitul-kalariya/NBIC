@@ -9,7 +9,7 @@ from app.api.dependencies import get_vector_db
 from app.schemas.langchain_schemas.file_schema import FileSchema
 from app.schemas.nbic_schema import BookDataSchema
 from app.parsers.nbic_json import json_parser
-from pydantic import BaseModel
+
 
 from app.exception.base_exception import (
     file_extension_not_supported,
