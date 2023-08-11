@@ -38,6 +38,9 @@ class CustomPinecone(Pinecone, CustomBaseVectorStore):
         meta['tokens'] = count_tokens(docs)
         embeddings = self._embedding_function(docs)
         upload_data.append({'id':str(id),'values':embeddings,'metadata':meta})
+        with open('uploaded_data.json','a') as file:
+            file.write(str(upload_data))
+        print(upload_data) 
         return self._index.upsert(vectors=upload_data,namespace=self._namespace)
 
     def update_document_with_index(self,id:Any ,docs:str,meta:dict={}):
