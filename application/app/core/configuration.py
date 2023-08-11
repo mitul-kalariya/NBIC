@@ -15,7 +15,7 @@ load_dotenv(dotenv_path)
 class Settings(BaseSettings):
     HOST: str = "127.0.0.1"
     PORT: int = 8000
-    RELOAD: bool = False
+    RELOAD: bool = True
     API_V1_STR: str = os.environ.get("API_V1_STR")
     SOCKET_V1_STR: str = "/socket/v1"
     SECRET_KEY: str = os.environ.get("SECRET_KEY")

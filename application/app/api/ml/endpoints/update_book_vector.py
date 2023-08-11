@@ -14,9 +14,8 @@ from app.exception.base_exception import (
 
 router = APIRouter()
 
-
-@router.post("/upload-book-vector", status_code=status.HTTP_201_CREATED)
-async def upload_data(
+@router.post("/update-book-vector", status_code=status.HTTP_201_CREATED)
+async def update_data(
     book_data: BookDataSchema, vector_db: VectorStore = Depends(get_vector_db)
 ):
     """
@@ -30,10 +29,10 @@ async def upload_data(
     """
     book_id, docs, metadata = json_parser(book_data)
     try:
-        vector_db.insert_document_with_index(book_id, docs, meta=metadata)
+        vector_db.update_document_with_index(book_id, docs, meta=metadata)
         return JSONResponse(
             {
-                "message": "vector data inserted successfully",
+                "message": "vector data inserted created successfully",
             },
             status_code=status.HTTP_201_CREATED,
         )

@@ -1,3 +1,5 @@
+import tiktoken
+
 from typing import List, Dict
 
 from langchain.docstore import InMemoryDocstore
@@ -45,3 +47,10 @@ def custom_split_documents(
     documents = text_splitter.split_documents(documents)
 
     return documents
+
+
+def count_tokens(document: str)->int:
+    """counting the number of tokens parsed from given string input with tick-token"""
+    encoding = tiktoken.get_encoding("cl100k_base")
+    num_tokens = len(encoding.encode(document))
+    return num_tokens
