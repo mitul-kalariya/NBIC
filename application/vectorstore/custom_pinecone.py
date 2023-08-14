@@ -30,26 +30,23 @@ class CustomPinecone(Pinecone, CustomBaseVectorStore):
         index = pinecone.Index(os.environ.get("PINECONE_INDEX"))
         return index
 
-
-    def insert_document_with_index(self,id:Any ,docs:str,meta:dict={}):
+    def insert_document_with_index(self, id: Any, docs: str, meta: dict = {}):
         """insert single data raw into pinecone database with index"""
         upload_data = []
         meta[self._text_key] = docs
-        meta['tokens'] = count_tokens(docs)
+        meta["tokens"] = count_tokens(docs)
         embeddings = self._embedding_function(docs)
-        upload_data.append({'id':str(id),'values':embeddings,'metadata':meta})
-        with open('uploaded_data.json','a') as file:
-            file.write(str(upload_data))
-        print(upload_data) 
-        return self._index.upsert(vectors=upload_data,namespace=self._namespace)
+        upload_data.append({"id": str(id), "values": embeddings, "metadata": meta})
+        return self._index.upsert(vectors=upload_data, namespace=self._namespace)
 
-    def update_document_with_index(self,id:Any ,docs:str,meta:dict={}):
+    def update_document_with_index(self, id: Any, docs: str, meta: dict = {}):
         """update single data raw in pinecone database with given index"""
         meta[self._text_key] = docs
-        meta['tokens'] = count_tokens(docs)
+        meta["tokens"] = count_tokens(docs)
         embeddings = self._embedding_function(docs)
-        return self._index.update(id=str(id),values=embeddings,set_metadata=meta,namespace=self._namespace)
-
+        return self._index.update(
+            id=str(id), values=embeddings, set_metadata=meta, namespace=self._namespace
+        )
 
     def insert_documents(self, docs: List[Document]):
         """Insert documents into the pinecone database."""
@@ -83,6 +80,12 @@ class CustomPinecone(Pinecone, CustomBaseVectorStore):
 
 custom_pinecone = CustomPinecone(
     embedding_function=VectorDatabaseConstants.VECTOR_EMBEDDING.value.embed_query,
-    text_key="langchain",
+    text_key="langchainn",
     namespace="namespace",
+)
+
+nbic_pinecone = CustomPinecone(
+    embedding_function=VectorDatabaseConstants.VECTOR_EMBEDDING.value.embed_query,
+    text_key="text",
+    namespace="nbic",
 )

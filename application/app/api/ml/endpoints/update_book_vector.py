@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.post("/update-book-vector", status_code=status.HTTP_201_CREATED)
 async def update_data(
-    book_data: BookDataSchema, vector_db: VectorStore = Depends(get_vector_db)
+    book_data: BookDataSchema, vector_db: VectorStore = Depends(get_vector_db(vectordb_name="nbic_pinecone"))
 ):
     """
     Target Json Payload format
