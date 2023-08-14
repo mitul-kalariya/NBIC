@@ -2,7 +2,7 @@ import re
 from urllib.parse import unquote
 from bs4 import BeautifulSoup
 from langchain.schema import Document
-from app.schemas.nbic_schema import BookDataSchema
+from app.schemas.nbic_schema import BookDataSchema, BookFunctionalSchema
 from app.utils.document_utils import count_tokens
 
 """
@@ -14,34 +14,48 @@ OP: Document[object] converted data of provided book
 """
 
 
-def json_parser(book_data: BookDataSchema) -> None:
+def json_parser(parsed_data: BookDataSchema) -> None:
     """
     Loads a Json object and converts it into document object of langchain
 
     Args:
         book_data (BookDataSchema): A schema object with book data information
     """
-    book_id = book_data.id
-    book_data.description = re.sub(r"\n", "", clean_description(book_data.description))
     meta_fields = ["title", "author_name", "category", "tagName"]
-    base_data = (
-        " title | "
-        + book_data.title
-        + ", author_name | "
-        + book_data.author_name
-        + ", category | "
-        + book_data.description
-        + ", tagName | "
-        + book_data.tagName
-        + ", description | "
-        + book_data.description
-    )
-    book_dict = dict(book_data)
-    meta = {x: book_dict.get(x) for x in meta_fields}
-    return book_id, base_data, meta
+    parsed_ids = []
+    parsed_tuples = []
+    for book_data in parsed_data:
+        book_id = book_data.id
+        parsed_ids.append(book_id)
+        book_data.description = clean_description(book_data.description)
+        base_data = generate_base_data(book_data)
+        book_dict = dict(book_data)
+        meta = {x: book_dict.get(x) for x in meta_fields}
+        parsed_tuples.append(
+            BookFunctionalSchema(book_id=book_id, text_content=base_data, metadata=meta)
+        )
+
+    return parsed_tuples, parsed_ids
 
 
 def clean_description(document: str):
     """clean the html encoded string into pure text"""
     decoded_string = unquote(document)
-    return BeautifulSoup(decoded_string, "lxml").text
+    clean_data = re.sub(r"\n", "", BeautifulSoup(decoded_string, "lxml").text)
+    return clean_data
+
+
+def generate_base_data(book_data):
+    """"""
+    return (
+        " title | "
+        + book_data.title
+        + ", author_name | "
+        + book_data.author_name
+        + ", category | "
+        + book_data.category
+        + ", tagName | "
+        + book_data.tagName
+        + ", description | "
+        + book_data.description
+    )

@@ -15,9 +15,9 @@ from app.core.configuration import settings
 
 logger = logging.getLogger(__name__)
 
-http_tunnel = ngrok.connect(addr="http://127.0.0.1:8080")
-ssh_tunnel = ngrok.connect(8080, "http")
-print("Public URL: ", http_tunnel)
+# http_tunnel = ngrok.connect(addr="http://127.0.0.1:8080")
+# ssh_tunnel = ngrok.connect(8080, "http")
+# print("Public URL: ", http_tunnel)
 
 # if settings.SENTRY_DSN:
 #     sentry_sdk.init(

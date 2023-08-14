@@ -68,3 +68,8 @@ invalid_jwt_token = HTTPException(
 expired_jwt_token = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED, detail="provided token has expired"
 )
+
+vector_db_upsert_issue = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail = "Issue with vector DB Upload or Update task"
+)

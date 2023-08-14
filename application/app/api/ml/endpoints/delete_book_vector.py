@@ -15,7 +15,7 @@ from app.exception.base_exception import (
 router = APIRouter()
 
 
-@router.post("/delete-book-vector", status_code=status.HTTP_201_CREATED)
+@router.post("/delete-book-vector", status_code=status.HTTP_200_OK)
 async def delete_data(
     ids: DeleteBookSchema,
     vector_db: VectorStore = Depends(get_vector_db),
@@ -31,7 +31,7 @@ async def delete_data(
             {
                 "message": "vector data deleted successfully",
             },
-            status_code=status.HTTP_201_CREATED,
+            status_code=status.HTTP_200_OK,
         )
     except Exception as e:
         raise vector_index_not_created

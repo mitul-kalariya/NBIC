@@ -8,6 +8,7 @@ from langchain.vectorstores.pinecone import Pinecone
 from vectorstore.base import CustomBaseVectorStore
 from app.utils.constants import VectorDatabaseConstants
 from app.utils.document_utils import count_tokens
+from app.exception.base_exception import vector_db_upsert_issue
 
 
 class CustomPinecone(Pinecone, CustomBaseVectorStore):
@@ -30,14 +31,17 @@ class CustomPinecone(Pinecone, CustomBaseVectorStore):
         index = pinecone.Index(os.environ.get("PINECONE_INDEX"))
         return index
 
-    def insert_document_with_index(self, id: Any, docs: str, meta: dict = {}):
+    def upsert_document_with_index(self, id: Any, docs: str, meta: dict = {}):
         """insert single data raw into pinecone database with index"""
         upload_data = []
         meta[self._text_key] = docs
         meta["tokens"] = count_tokens(docs)
         embeddings = self._embedding_function(docs)
         upload_data.append({"id": str(id), "values": embeddings, "metadata": meta})
-        return self._index.upsert(vectors=upload_data, namespace=self._namespace)
+        try:
+            return self._index.upsert(vectors=upload_data, namespace=self._namespace)
+        except Exception as e:
+            raise vector_db_upsert_issue
 
     def update_document_with_index(self, id: Any, docs: str, meta: dict = {}):
         """update single data raw in pinecone database with given index"""
