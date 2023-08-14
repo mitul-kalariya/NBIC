@@ -1,12 +1,12 @@
 """
     NBIC OpenAI integration Schema
 """
-from typing import Union,Optional
+from typing import Union,Optional,List
 from pydantic import BaseModel
 
 class BookDataSchema(BaseModel):
     """
-    Book data upload schema
+    Book data upload and update schema
     """
     id : int
     title : str
@@ -14,3 +14,9 @@ class BookDataSchema(BaseModel):
     description : str
     category : str
     tagName : str
+
+class DeleteBookSchema(BaseModel):
+    """
+    Book delete schema
+    """
+    ids : List[Union[str,int]]

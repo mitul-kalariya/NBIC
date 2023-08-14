@@ -1,4 +1,4 @@
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Union
 import pinecone, os
 
 from langchain.docstore.document import Document
@@ -47,6 +47,11 @@ class CustomPinecone(Pinecone, CustomBaseVectorStore):
         return self._index.update(
             id=str(id), values=embeddings, set_metadata=meta, namespace=self._namespace
         )
+
+    def delete_document_with_index(self, ids: List[Union[str, int]]):
+        """delete one or more rows of date in pinecone database with given id(s)"""
+        delete_ids = [str(id) for id in ids]
+        return self._index.delete(ids=delete_ids, namespace=self._namespace)
 
     def insert_documents(self, docs: List[Document]):
         """Insert documents into the pinecone database."""

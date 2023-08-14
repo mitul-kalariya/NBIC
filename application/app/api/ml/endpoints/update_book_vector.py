@@ -19,7 +19,6 @@ router = APIRouter()
 async def update_data(
     book_data: BookDataSchema,
     vector_db: VectorStore = Depends(get_vector_db),
-    vectordb_name="nbic_pinecone",
 ):
     """
     Target Json Payload format
