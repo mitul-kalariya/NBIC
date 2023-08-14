@@ -35,7 +35,7 @@ async def update_data(
         vector_db.update_document_with_index(book_id, docs, meta=metadata)
         return JSONResponse(
             {
-                "message": "vector data inserted created successfully",
+                "message": "vector data updated successfully",
             },
             status_code=status.HTTP_201_CREATED,
         )
