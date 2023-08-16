@@ -1,11 +1,6 @@
-from vectorstore.custom_faiss import custom_faiss
-
-# from vectorstore.custom_pgvector import custom_pgvector
-from vectorstore.custom_pinecone import custom_pinecone, nbic_pinecone
+from vectorstore.custom_pinecone import nbic_pinecone
 
 
 VECTOR_DB_MAPPING = {
-    "faiss": custom_faiss,
-    # "pgvector": custom_pgvector,
     "pinecone": nbic_pinecone,
 }
