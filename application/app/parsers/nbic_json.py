@@ -2,7 +2,7 @@ import re
 from urllib.parse import unquote
 from bs4 import BeautifulSoup
 from langchain.schema import Document
-from app.schemas.nbic_schema import BookDataSchema, BookFunctionalSchema
+from app.schemas.nbic_schema import BookByteSchema, BookFunctionalSchema
 from app.utils.document_utils import count_tokens
 
 """
@@ -14,7 +14,7 @@ OP: Document[object] converted data of provided book
 """
 
 
-def json_parser(parsed_data: BookDataSchema) -> None:
+def json_parser(parsed_data: BookByteSchema) -> None:
     """
     Loads a Json object and converts it into document object of langchain
 
@@ -25,7 +25,7 @@ def json_parser(parsed_data: BookDataSchema) -> None:
     parsed_ids = []
     parsed_tuples = []
     for book_data in parsed_data:
-        book_id = book_data.id
+        book_id = str(book_data.id)
         parsed_ids.append(book_id)
         book_data.description = clean_description(book_data.description)
         base_data = generate_base_data(book_data)

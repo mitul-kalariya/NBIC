@@ -71,5 +71,10 @@ expired_jwt_token = HTTPException(
 
 vector_db_upsert_issue = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
-    detail = "Issue with vector DB Upload or Update task"
+    detail="Issue with vector DB Upload or Update task",
+)
+
+vector_db_delete_issue = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Issue with vector DB data Deletion task",
 )

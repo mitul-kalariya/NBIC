@@ -4,11 +4,12 @@ import pinecone, os
 from langchain.docstore.document import Document
 from langchain.embeddings.base import Embeddings
 from langchain.vectorstores.pinecone import Pinecone
-
+from pinecone.exceptions import PineconeException
 from vectorstore.base import CustomBaseVectorStore
 from app.utils.constants import VectorDatabaseConstants
+from app.schemas.nbic_schema import BookFunctionalSchema
 from app.utils.document_utils import count_tokens
-from app.exception.base_exception import vector_db_upsert_issue
+from app.exception.base_exception import vector_db_upsert_issue, vector_db_delete_issue
 
 
 class CustomPinecone(Pinecone, CustomBaseVectorStore):
@@ -31,16 +32,29 @@ class CustomPinecone(Pinecone, CustomBaseVectorStore):
         index = pinecone.Index(os.environ.get("PINECONE_INDEX"))
         return index
 
-    def upsert_document_with_index(self, id: Any, docs: str, meta: dict = {}):
+    def upsert_document_with_index(
+        self, documents: BookFunctionalSchema, ids: List[str]
+    ):
         """insert single data raw into pinecone database with index"""
-        upload_data = []
-        meta[self._text_key] = docs
-        meta["tokens"] = count_tokens(docs)
-        embeddings = self._embedding_function(docs)
-        upload_data.append({"id": str(id), "values": embeddings, "metadata": meta})
         try:
-            return self._index.upsert(vectors=upload_data, namespace=self._namespace)
-        except Exception as e:
+            upload_data = []
+            for i, docs in enumerate(documents):
+                docs.metadata[self._text_key] = docs.text_content
+                docs.metadata["tokens"] = count_tokens(docs.text_content)
+                embeddings = self._embedding_function(docs.text_content)
+                upload_data.append(
+                    {
+                        "id": docs.book_id,
+                        "values": embeddings,
+                        "metadata": docs.metadata,
+                    }
+                )
+            self._index.upsert(
+                vectors=upload_data, namespace=self._namespace, batch_size=32
+            )
+            return ids
+        except PineconeException as pinecone_issue:
+            vector_db_upsert_issue.detail = f"Pinecone: {pinecone_issue}"
             raise vector_db_upsert_issue
 
     def update_document_with_index(self, id: Any, docs: str, meta: dict = {}):
@@ -54,8 +68,12 @@ class CustomPinecone(Pinecone, CustomBaseVectorStore):
 
     def delete_document_with_index(self, ids: List[Union[str, int]]):
         """delete one or more rows of date in pinecone database with given id(s)"""
-        delete_ids = [str(id) for id in ids]
-        return self._index.delete(ids=delete_ids, namespace=self._namespace)
+        try:
+            delete_ids = [str(id) for id in ids]
+            return self._index.delete(ids=delete_ids, namespace=self._namespace)
+        except PineconeException as pinecone_issue:
+            vector_db_upsert_issue.detail = f"Pinecone: {pinecone_issue}"
+            raise vector_db_upsert_issue
 
     def insert_documents(self, docs: List[Document]):
         """Insert documents into the pinecone database."""
