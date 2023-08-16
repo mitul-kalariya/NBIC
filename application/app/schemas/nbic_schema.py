@@ -12,10 +12,10 @@ class BookByteSchema(BaseModel):
 
     id: int
     title: str
-    author_name: str
+    author: str
     description: str
-    category: str
-    tagName: str
+    categories: str
+    tags: str
 
 
 class BookUpsertSchema(BaseModel):
@@ -23,7 +23,7 @@ class BookUpsertSchema(BaseModel):
     Book data upload and update schema
     """
 
-    data: List[BookByteSchema]
+    books: List[BookByteSchema]
 
 
 class BookDeleteSchema(BaseModel):
@@ -31,7 +31,7 @@ class BookDeleteSchema(BaseModel):
     Book delete schema
     """
 
-    ids: List[Union[str, int]]
+    book_ids: List[Union[str, int]]
 
 
 class BookFunctionalSchema(BaseModel):

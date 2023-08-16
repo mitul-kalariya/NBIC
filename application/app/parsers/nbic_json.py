@@ -21,7 +21,7 @@ def json_parser(parsed_data: BookByteSchema) -> None:
     Args:
         book_data (BookDataSchema): A schema object with book data information
     """
-    meta_fields = ["title", "author_name", "category", "tagName"]
+    meta_fields = ["title", "author", "categories", "tags"]
     parsed_ids = []
     parsed_tuples = []
     for book_data in parsed_data:
@@ -51,11 +51,11 @@ def generate_base_data(book_data):
         " title | "
         + book_data.title
         + ", author_name | "
-        + book_data.author_name
+        + book_data.author
         + ", category | "
-        + book_data.category
+        + book_data.categories
         + ", tagName | "
-        + book_data.tagName
+        + book_data.tags
         + ", description | "
         + book_data.description
     )

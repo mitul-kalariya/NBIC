@@ -27,7 +27,7 @@ async def chat(
                 "ok": True,
                 "upserted_ids": ", ".join(parsed_ids),
                 "message": "vector data Upserted successfully",
-                "ttl": str(datetime.now() - start_time),
+                "ttl": str((datetime.now() - start_time).isoformat()),
             },
             status_code=status.HTTP_201_CREATED,
         )
@@ -37,7 +37,7 @@ async def chat(
                 "ok": False,
                 "requested_ids": ", ".join(parsed_ids),
                 "error_message": e.detail,
-                "ttl": str(datetime.now() - start_time),
+                "ttl": str((datetime.now() - start_time).isoformat()),
             },
             status_code=e.status_code,
         )
@@ -47,7 +47,7 @@ async def chat(
                 "ok": False,
                 "requested_ids": ", ".join(parsed_ids),
                 "error_message": str(e),
-                "ttl": str(datetime.now() - start_time),
+                "ttl": str((datetime.now() - start_time).isoformat()),
             },
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
