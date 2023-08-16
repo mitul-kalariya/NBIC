@@ -2,7 +2,7 @@
     DEPENDENCIES FILE FOR ROUTES
 """
 from typing import Generator, Optional, Annotated
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Header
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from pydantic import ValidationError
@@ -60,7 +60,13 @@ def get_vector_db(vectordb_name: str = "pinecone") -> Optional[VectorStore]:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="connection to vector database not established",
-        )   
+        )
+
+
+def authorize_user_id(user_id: str = Header(...)):
+    #TODO: User Id authentication code with postgres cli
+    if user_id != "approved":
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized Access")
 
 def get_db() -> Generator:
     """

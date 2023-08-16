@@ -10,7 +10,7 @@ class BookByteSchema(BaseModel):
     Book Information
     """
 
-    id: int
+    id: str
     title: str
     author: str
     description: str
@@ -31,7 +31,7 @@ class BookDeleteSchema(BaseModel):
     Book delete schema
     """
 
-    book_ids: List[Union[str, int]]
+    book_ids: List[str]
 
 
 class BookFunctionalSchema(BaseModel):

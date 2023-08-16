@@ -1,7 +1,7 @@
 """
     ROUTER FILE
 """
-from fastapi import APIRouter
+from fastapi import APIRouter,Header
 
 from app.api.ml.endpoints import book_byte_delete, book_byte_upsert, chat
 
